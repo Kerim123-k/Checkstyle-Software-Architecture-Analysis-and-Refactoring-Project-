@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  jQAssistant constraint queries for the Pipe-and-Filter slice.
+  Implements Q1-Q5 per spec FR-010 / SC-003 / T080-T085.
+
+  Each <constraint> returns rows representing violations; the build is
+  expected to fail when any constraint matches. Run with:
+      mvn -P jqassistant verify
+
+  The matching Maven profile is intentionally NOT wired into pom.xml by
+  this slice (FR-015 keeps pom edits out of scope). To enable the
+  profile manually, add the jqassistant-maven-plugin and reference this
+  rule file from a <jqassistant.indexedRules> entry.
+-->
+<jqassistant-rules xmlns="http://schema.jqassistant.org/rule/v2.2"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://schema.jqassistant.org/rule/v2.2
+                       http://schema.jqassistant.org/rule/jqassistant-rule-v2.2.xsd">
+
+  <group id="pipe-and-filter:Default">
+    <includeConstraint refId="pipe-and-filter:Q1-FilterDependencyAllowList"/>
+    <includeConstraint refId="pipe-and-filter:Q2-MeasurementFilterDoesNotExtendAbstractCheck"/>
+    <includeConstraint refId="pipe-and-filter:Q4-AcyclicFilterGraph"/>
+    <includeConstraint refId="pipe-and-filter:Q5-NoMeasurementFilterCallsLog"/>
+  </group>
+
+  <constraint id="pipe-and-filter:Q1-FilterDependencyAllowList">
+    <description>
+      Filter implementations may only depend on JDK packages, the pipeline
+      core (..checks.pipeline..), the Checkstyle api package, or
+      allow-listed util types. Any other dependency is an architectural
+      leak.
+    </description>
+    <cypher><![CDATA[
+      MATCH (filter:Class)-[:IMPLEMENTS]->(:Type {fqn:
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.Filter"})
+      MATCH (filter)-[:DEPENDS_ON]->(target:Type)
+      WHERE NOT target.fqn STARTS WITH "java."
+        AND NOT target.fqn STARTS WITH "javax."
+        AND NOT target.fqn STARTS WITH
+            "com.puppycrawl.tools.checkstyle.checks.pipeline."
+        AND NOT target.fqn STARTS WITH
+            "com.puppycrawl.tools.checkstyle.checks.metrics.pipeline."
+        AND NOT target.fqn STARTS WITH
+            "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline."
+        AND NOT target.fqn STARTS WITH
+            "com.puppycrawl.tools.checkstyle.api."
+        AND NOT target.fqn STARTS WITH
+            "com.puppycrawl.tools.checkstyle.utils."
+      RETURN filter.fqn AS Filter, target.fqn AS DisallowedDependency
+    ]]></cypher>
+  </constraint>
+
+  <constraint id="pipe-and-filter:Q2-MeasurementFilterDoesNotExtendAbstractCheck">
+    <description>
+      No class under ..pipeline.. may extend AbstractCheck or
+      AbstractFileSetCheck. Filters are framework-free.
+    </description>
+    <cypher><![CDATA[
+      MATCH (filter:Class)-[:EXTENDS*]->(base:Type)
+      WHERE (filter.fqn STARTS WITH
+              "com.puppycrawl.tools.checkstyle.checks.pipeline."
+          OR filter.fqn STARTS WITH
+              "com.puppycrawl.tools.checkstyle.checks.metrics.pipeline."
+          OR filter.fqn STARTS WITH
+              "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.")
+        AND base.fqn IN [
+          "com.puppycrawl.tools.checkstyle.api.AbstractCheck",
+          "com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck"
+        ]
+      RETURN filter.fqn AS OffendingFilter, base.fqn AS ForbiddenBase
+    ]]></cypher>
+  </constraint>
+
+  <concept id="pipe-and-filter:Q3-AdjacencyGraph">
+    <description>
+      Materializes the adjacency graph (filter, in-pipe-type, out-pipe-type)
+      as PIPELINE_EDGE relationships. Drives the L3/L4 diagram source.
+    </description>
+    <cypher><![CDATA[
+      MATCH (filter:Class)-[:IMPLEMENTS]->(:Type {fqn:
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.Filter"})
+      MATCH (filter)-[:DECLARES]->(method:Method {name: "process"})
+      MATCH (method)-[:HAS]->(p1:Parameter {index: 0})
+      MATCH (method)-[:HAS]->(p2:Parameter {index: 1})
+      MERGE (filter)-[edge:PIPELINE_EDGE]->(filter)
+      SET edge.inType  = p1.signature,
+          edge.outType = p2.signature
+      RETURN filter.fqn AS Filter, p1.signature AS In, p2.signature AS Out
+    ]]></cypher>
+  </concept>
+
+  <constraint id="pipe-and-filter:Q4-AcyclicFilterGraph">
+    <description>
+      The static dependency graph among Filter implementations must be
+      acyclic. A filter referencing another concrete Filter as a field is
+      already forbidden by R9; this constraint catches indirect cycles
+      via shared utility types.
+    </description>
+    <cypher><![CDATA[
+      MATCH (a:Class)-[:IMPLEMENTS]->(:Type {fqn:
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.Filter"})
+      MATCH (b:Class)-[:IMPLEMENTS]->(:Type {fqn:
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.Filter"})
+      WHERE a <> b
+      MATCH path = (a)-[:DEPENDS_ON*]->(b)
+      MATCH back = (b)-[:DEPENDS_ON*]->(a)
+      RETURN a.fqn AS FilterA, b.fqn AS FilterB
+    ]]></cypher>
+  </constraint>
+
+  <constraint id="pipe-and-filter:Q5-NoMeasurementFilterCallsLog">
+    <description>
+      No measurement filter may invoke AbstractCheck.log(..). Violations
+      live downstream in ThresholdFilter / ViolationSink / driver.
+    </description>
+    <cypher><![CDATA[
+      MATCH (filter:Class)-[:IMPLEMENTS]->(:Type {fqn:
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.Filter"})
+      MATCH (filter)-[:DECLARES]->(:Method)-[:INVOKES]->(target:Method
+        {name: "log"})
+      MATCH (target)<-[:DECLARES]-(owner:Type)
+      WHERE owner.fqn IN [
+        "com.puppycrawl.tools.checkstyle.api.AbstractCheck",
+        "com.puppycrawl.tools.checkstyle.api.AbstractFileSetCheck"
+      ]
+      RETURN filter.fqn AS Filter, owner.fqn AS LoggerOwner
+    ]]></cypher>
+  </constraint>
+
+</jqassistant-rules>

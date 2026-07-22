@@ -1,0 +1,120 @@
+---
+type: specs.openrewrite.org/v1beta/recipe
+# workaround, as pom declaration not working.
+name: org.checkstyle.AllAutoFixes
+recipeList:
+  - org.checkstyle.CheckstyleAutoFix
+  - org.checkstyle.RefasterRules
+  - org.checkstyle.StaticAnalysis
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.checkstyle.CheckstyleAutoFix
+description: Checkstyle standard fixes.
+recipeList:
+  - org.checkstyle.autofix.CheckstyleAutoFix:
+      violationReportPath: target/cs_errors.xml
+      configurationPath: config/checkstyle-checks.xml
+      propertiesPath: config/openrewrite-recipes-checkstyle.properties
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.checkstyle.RefasterRules
+description: Picnic Refaster rules.
+recipeList:
+  - org.checkstyle.RefasterRules1
+  - org.checkstyle.RefasterRules2
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.checkstyle.RefasterRules1
+description: Picnic Refaster rules - Part 1.
+recipeList:
+  - tech.picnic.errorprone.refasterrules.BigDecimalRulesRecipes
+  - tech.picnic.errorprone.refasterrules.CharSequenceRulesRecipes
+  - tech.picnic.errorprone.refasterrules.ClassRulesRecipes
+  # Issue #18789: conflicts with UpgradeToJava21 (SortedSet.first vs getFirst)
+  # - tech.picnic.errorprone.refasterrules.CollectionRulesRecipes
+  - tech.picnic.errorprone.refasterrules.ComparatorRulesRecipes
+  - tech.picnic.errorprone.refasterrules.FileRulesRecipes
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.checkstyle.RefasterRules2
+description: Picnic Refaster rules - Part 2.
+recipeList:
+  - tech.picnic.errorprone.refasterrules.MapRulesRecipes
+  - tech.picnic.errorprone.refasterrules.MicrometerRulesRecipes
+  - tech.picnic.errorprone.refasterrules.MockitoRulesRecipes
+  # current maintainer don't "like" orElseThrow() as better form of get()
+  # - tech.picnic.errorprone.refasterrules.OptionalRulesRecipes
+  - tech.picnic.errorprone.refasterrules.PatternRulesRecipes
+  - tech.picnic.errorprone.refasterrules.PreconditionsRulesRecipes
+  - tech.picnic.errorprone.refasterrules.PrimitiveRulesRecipes
+  - tech.picnic.errorprone.refasterrules.StreamRulesRecipes
+  - tech.picnic.errorprone.refasterrules.TimeRulesRecipes
+---
+type: specs.openrewrite.org/v1beta/recipe
+name: org.checkstyle.StaticAnalysis
+description: OpenRewrite standard fixes.
+recipeList:
+  # composite list
+  - org.openrewrite.staticanalysis.CodeCleanup:
+      exclude:
+        # all suppressions until https://github.com/checkstyle/checkstyle/issues/18952
+        - org.openrewrite.staticanalysis.DefaultComesLast
+        # Kept excluded: OpenRewrite's EmptyBlock removes blocks entirely,
+        # which conflicts with Checkstyle's EmptyBlockCheck that requires
+        # blocks to have statements or text. Automatic deletion is too aggressive.
+        - org.openrewrite.staticanalysis.EmptyBlock
+        - org.openrewrite.staticanalysis.FinalizePrivateFields
+        - org.openrewrite.staticanalysis.ForLoopControlVariablePostfixOperators
+        - org.openrewrite.java.format.MethodParamPad
+        - org.openrewrite.java.format.NoWhitespaceAfter
+        - org.openrewrite.java.format.NoWhitespaceBefore
+        - org.openrewrite.staticanalysis.TypecastParenPad
+        - org.openrewrite.staticanalysis.ExplicitInitialization
+        # Kept excluded: OpenRewrite's FallThrough always adds break statements,
+        # ignoring Checkstyle's FallThroughCheck which allows configurable relief
+        # comments via `reliefPattern` and can optionally skip checking the last
+        # case group with `checkLastCaseGroup`
+        - org.openrewrite.staticanalysis.FallThrough
+        - org.openrewrite.staticanalysis.HideUtilityClassConstructor
+        # Kept excluded: OpenRewrite's NeedBraces always adds braces, overriding
+        # Checkstyle's NeedBracesCheck which allows configuration for single-line
+        # statements and empty loop bodies via `allowSingleLineStatement` and
+        # `allowEmptyLoopBody` options.
+        - org.openrewrite.staticanalysis.NeedBraces
+        - org.openrewrite.staticanalysis.OperatorWrap
+        - org.openrewrite.staticanalysis.ReplaceThreadRunWithThreadStart
+        - org.openrewrite.staticanalysis.ChainStringBuilderAppendCalls
+        - org.openrewrite.staticanalysis.ReplaceStringBuilderWithString
+        - org.openrewrite.staticanalysis.CustomImportOrder
+
+  # individual recipes
+  - org.openrewrite.java.RemoveUnusedImports
+  - org.openrewrite.java.format.NormalizeFormat
+  - org.openrewrite.java.format.NormalizeLineBreaks
+  - org.openrewrite.java.format.RemoveTrailingWhitespace
+  - org.openrewrite.java.migrate.UpgradeToJava21
+  - org.openrewrite.java.migrate.lang.StringRulesRecipes
+  - org.openrewrite.java.migrate.util.MigrateInflaterDeflaterToClose
+  - org.openrewrite.java.migrate.util.ReplaceStreamCollectWithToList
+  - org.openrewrite.java.migrate.util.SequencedCollection
+  - org.openrewrite.java.recipes.JavaRecipeBestPractices
+  - org.openrewrite.java.recipes.RecipeTestingBestPractices
+  - org.openrewrite.maven.BestPractices
+  - org.openrewrite.staticanalysis.BufferedWriterCreationRecipes
+  - org.openrewrite.staticanalysis.InlineVariable
+  - org.openrewrite.staticanalysis.JavaApiBestPractices
+  - org.openrewrite.staticanalysis.LowercasePackage
+  - org.openrewrite.staticanalysis.MissingOverrideAnnotation
+  - org.openrewrite.staticanalysis.ModifierOrder
+  - org.openrewrite.staticanalysis.NoFinalizer
+  - org.openrewrite.staticanalysis.NoToStringOnStringType
+  - org.openrewrite.staticanalysis.RemoveUnusedLocalVariables
+  - org.openrewrite.staticanalysis.RemoveUnusedPrivateFields
+  - org.openrewrite.staticanalysis.RemoveUnusedPrivateMethods
+  - org.openrewrite.staticanalysis.ReplaceLambdaWithMethodReference
+  - org.openrewrite.staticanalysis.SimplifyTernaryRecipes
+  - org.openrewrite.staticanalysis.URLEqualsHashCodeRecipes
+  - org.openrewrite.staticanalysis.UnnecessaryCloseInTryWithResources
+  - org.openrewrite.staticanalysis.UnnecessaryExplicitTypeArguments
+  - org.openrewrite.staticanalysis.UnnecessaryReturnAsLastStatement
+  - org.openrewrite.staticanalysis.UseLambdaForFunctionalInterface

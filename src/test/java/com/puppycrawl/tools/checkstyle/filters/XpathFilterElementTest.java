@@ -1,0 +1,164 @@
+///////////////////////////////////////////////////////////////////////////////////////////////
+// checkstyle: Checks Java source code and other text files for adherence to a set of rules.
+// Copyright (C) 2001-2026 the original author or authors.
+//
+// This library is free software; you can redistribute it and/or
+// modify it under the terms of the GNU Lesser General Public
+// License as published by the Free Software Foundation; either
+// version 2.1 of the License, or (at your option) any later version.
+//
+// This library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public
+// License along with this library; if not, write to the Free Software
+// Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+package com.puppycrawl.tools.checkstyle.filters;
+
+import static com.google.common.truth.Truth.assertWithMessage;
+
+import java.io.File;
+import java.nio.charset.StandardCharsets;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import com.puppycrawl.tools.checkstyle.AbstractModuleTestSupport;
+import com.puppycrawl.tools.checkstyle.JavaParser;
+import com.puppycrawl.tools.checkstyle.TreeWalkerAuditEvent;
+import com.puppycrawl.tools.checkstyle.api.FileContents;
+import com.puppycrawl.tools.checkstyle.api.FileText;
+import com.puppycrawl.tools.checkstyle.api.TokenTypes;
+import com.puppycrawl.tools.checkstyle.api.Violation;
+import net.sf.saxon.Configuration;
+import net.sf.saxon.sxpath.XPathEvaluator;
+import net.sf.saxon.sxpath.XPathExpression;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.EqualsVerifierReport;
+
+public class XpathFilterElementTest extends AbstractModuleTestSupport {
+
+    private File file;
+    private FileContents fileContents;
+
+    @BeforeEach
+    public void setUp() throws Exception {
+        file = new File(getPath("InputXpathFilterElementSuppressByXpath.java"));
+        fileContents = new FileContents(new FileText(file,
+                StandardCharsets.UTF_8.name()));
+    }
+
+    @Override
+    public String getPackageLocation() {
+        return "com/puppycrawl/tools/checkstyle/filters/xpathfilterelement";
+    }
+
+    @Test
+    public void testNonMatchingTokenType() throws Exception {
+        final String xpath = "//METHOD_DEF[./IDENT[@text='countTokens']]";
+        final XpathFilterElement filter = new XpathFilterElement(
+                "InputXpathFilterElementSuppressByXpath", "Test", null, null, xpath);
+        final TreeWalkerAuditEvent ev = getEvent(4, 4,
+                TokenTypes.CLASS_DEF);
+        assertWithMessage("Event should be accepted")
+                .that(filter.accept(ev))
+                .isTrue();
+    }
+
+    @Test
+    public void testNonMatchingColumnNumber() throws Exception {
+        final String xpath = "//CLASS_DEF[./IDENT[@text='InputXpathFilterElementSuppressByXpath']]";
+        final XpathFilterElement filter = new XpathFilterElement(
+                "InputXpathFilterElementSuppressByXpath", "Test", null, null, xpath);
+        final TreeWalkerAuditEvent ev = getEvent(3, 100,
+                TokenTypes.CLASS_DEF);
+        assertWithMessage("Event should be accepted")
+                .that(filter.accept(ev))
+                .isTrue();
+    }
+
+    @Test
+    public void testNullFileName() {
+        final XpathFilterElement filter = new XpathFilterElement(
+                "InputXpathFilterElementSuppressByXpath", "Test", null, null, null);
+        final TreeWalkerAuditEvent ev = new TreeWalkerAuditEvent(null,
+                null, null, null);
+        assertWithMessage("Event should be accepted")
+                .that(filter.accept(ev))
+                .isTrue();
+    }
+
+    @Test
+    public void testNonMatchingFileRegexp() throws Exception {
+        final XpathFilterElement filter =
+                new XpathFilterElement("NonMatchingRegexp", "Test", null, null, null);
+        final TreeWalkerAuditEvent ev = getEvent(3, 0,
+                TokenTypes.CLASS_DEF);
+        assertWithMessage("Event should be accepted")
+                .that(filter.accept(ev))
+                .isTrue();
+    }
+
+    @Test
+    public void testNullViolation() {
+        final XpathFilterElement filter = new XpathFilterElement(
+                "InputXpathFilterElementSuppressByXpath", "Test", null, null, null);
+        final TreeWalkerAuditEvent ev = new TreeWalkerAuditEvent(null,
+                file.getName(), null, null);
+        assertWithMessage("Event should be accepted")
+                .that(filter.accept(ev))
+                .isTrue();
+    }
+
+    @Test
+    public void testDecideByMessage() throws Exception {
+        final Violation message = new Violation(1, 0, TokenTypes.CLASS_DEF, "", "",
+                null, null, null, getClass(), "Test");
+        final TreeWalkerAuditEvent ev = new TreeWalkerAuditEvent(fileContents, file.getName(),
+                message, JavaParser.parseFile(file, JavaParser.Options.WITHOUT_COMMENTS));
+        final XpathFilterElement filter1 = new XpathFilterElement(null, null, "Test", null, null);
+        final XpathFilterElement filter2 = new XpathFilterElement(null, null, "Bad", null, null);
+        assertWithMessage("Message match")
+                .that(filter1.accept(ev))
+                .isFalse();
+        assertWithMessage("Message not match")
+                .that(filter2.accept(ev))
+                .isTrue();
+    }
+
+    /**
+     * This test should remain as a low level pure unit test.
+     * It uses {@link EqualsVerifier} library to validate {@code equals()}
+     * and {@code hashCode()} methods on all edge cases. This is a very
+     * technical method with implementation by strict rules, not related
+     * to checkstyle's target of validation.
+     */
+    @Test
+    public void testEqualsAndHashCode() throws Exception {
+        final XPathEvaluator xpathEvaluator = new XPathEvaluator(Configuration.newConfiguration());
+        final EqualsVerifierReport ev = EqualsVerifier.forClass(XpathFilterElement.class)
+            .withPrefabValues(XPathExpression.class,
+                xpathEvaluator.createExpression("//METHOD_DEF"),
+                xpathEvaluator.createExpression("//VARIABLE_DEF"))
+                .usingGetClass()
+                .withIgnoredFields("xpathExpression", "isEmptyConfig")
+                .report();
+        assertWithMessage("Error: %s", ev.getMessage())
+                .that(ev.isSuccessful())
+                .isTrue();
+    }
+
+    private TreeWalkerAuditEvent getEvent(int line, int column, int tokenType)
+            throws Exception {
+        final Violation message =
+                new Violation(line, column, tokenType, "", "", null, null, null,
+                        getClass(), null);
+        return new TreeWalkerAuditEvent(fileContents, file.getName(), message,
+                JavaParser.parseFile(file, JavaParser.Options.WITHOUT_COMMENTS));
+    }
+
+}

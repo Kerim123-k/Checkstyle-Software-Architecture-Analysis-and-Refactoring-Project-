@@ -1,0 +1,7 @@
+# Pinned benchmark targets (T088). One repo per line: name|git-url|ref
+# Cloned into benchmarks/repos/<name> by run-bench.sh on first execution.
+minimal-json|https://github.com/ralfstx/minimal-json.git|master
+javapoet|https://github.com/square/javapoet.git|master
+gs-core|https://github.com/graphstream/gs-core.git|dev
+jgrapht-core|https://github.com/jgrapht/jgrapht.git|master
+calcite-core|https://github.com/apache/calcite.git|main

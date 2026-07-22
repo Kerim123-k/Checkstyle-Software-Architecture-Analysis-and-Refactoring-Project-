@@ -1,0 +1,149 @@
+{
+  "Q1": {
+    "columns": [
+      "Filter",
+      "DisallowedDependency"
+    ],
+    "rows": [
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.RecordComponentNumberMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.naming.AccessModifierOption"
+      ]
+    ],
+    "elapsed_ms": 282
+  },
+  "Q2": {
+    "columns": [
+      "OffendingFilter",
+      "ForbiddenBase"
+    ],
+    "rows": [],
+    "elapsed_ms": 31
+  },
+  "Q3": {
+    "columns": [
+      "Filter",
+      "In",
+      "Out"
+    ],
+    "rows": [
+      [
+        "com.puppycrawl.tools.checkstyle.checks.metrics.pipeline.BooleanExpressionMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.metrics.pipeline.CouplingMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.metrics.pipeline.CyclomaticMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.metrics.pipeline.JavaNCSSMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.metrics.pipeline.NPathMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.filter.IgnorePatternFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.filter.LineSplitterFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.filter.ThresholdFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.filter.TokenFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.filter.ViolationSink",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.AnonInnerLengthMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.ExecutableStatementCountMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.FileLengthMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.LambdaBodyLengthMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.LineLengthMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.MethodCountMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.MethodLengthMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.OuterTypeNumberMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.ParameterNumberMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ],
+      [
+        "com.puppycrawl.tools.checkstyle.checks.sizes.pipeline.RecordComponentNumberMeasurementFilter",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe",
+        "com.puppycrawl.tools.checkstyle.checks.pipeline.pipe.Pipe"
+      ]
+    ],
+    "elapsed_ms": 1185
+  },
+  "Q4": {
+    "columns": [
+      "FilterA",
+      "FilterB"
+    ],
+    "rows": [],
+    "elapsed_ms": 36396
+  },
+  "Q5": {
+    "columns": [
+      "Filter",
+      "LoggerOwner"
+    ],
+    "rows": [],
+    "elapsed_ms": 13
+  }
+}

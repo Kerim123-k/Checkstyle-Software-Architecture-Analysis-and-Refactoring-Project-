@@ -1,0 +1,17 @@
+<project>
+  <p>Examples:</p>
+<!-- CSOFF -->
+  <macro name="example">
+    <param name="path" value="Example3.java"/>
+    <param name="type" value="config"/>
+    <!-- // violation above 'Type config is not allowed in this file'
+    (Audit events with this message are not suppressed.) -->
+  </macro>
+  <macro name="example">
+    <param name="path" value="Example4.java"/>
+    <param name="type" value="code"/>
+    <!--  // filtered violation above 'Type code is not allowed. Use type raw instead'
+    -->
+<!-- CSON -->
+  </macro>
+</project>

@@ -1,0 +1,16 @@
+project,run_index,seconds
+minimal-json,1,2.817
+minimal-json,2,3.650
+minimal-json,3,4.371
+javapoet,1,5.737
+javapoet,2,6.819
+javapoet,3,6.618
+gs-core,1,8.101
+gs-core,2,9.812
+gs-core,3,9.109
+jgrapht-core,1,2.098
+jgrapht-core,2,2.530
+jgrapht-core,3,3.517
+calcite-core,1,59.230
+calcite-core,2,67.336
+calcite-core,3,63.550

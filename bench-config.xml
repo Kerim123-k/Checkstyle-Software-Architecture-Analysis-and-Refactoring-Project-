@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+    "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+    "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<!--
+  Bench config: enables every check in metrics + sizes slice (16 total).
+  Thresholds intentionally low so SampleAllViolations.java fires each at
+  least once. Used by T001 baseline capture, T069 RegressionDiffTest,
+  T070 PerCheckFireTest, and Phase 5 benchmarks.
+-->
+<module name="Checker">
+  <property name="charset" value="UTF-8"/>
+  <property name="severity" value="warning"/>
+  <property name="fileExtensions" value="java"/>
+
+  <!-- File-level checks -->
+  <module name="FileLength">
+    <property name="max" value="20"/>
+  </module>
+
+  <module name="LineLength">
+    <property name="max" value="40"/>
+    <property name="tabWidth" value="4"/>
+  </module>
+
+  <module name="TreeWalker">
+    <property name="tabWidth" value="4"/>
+
+    <!-- Sizes (AST) -->
+    <module name="AnonInnerLength">
+      <property name="max" value="2"/>
+    </module>
+    <module name="ExecutableStatementCount">
+      <property name="max" value="2"/>
+    </module>
+    <module name="LambdaBodyLength">
+      <property name="max" value="2"/>
+    </module>
+    <module name="MethodCount">
+      <property name="maxTotal" value="2"/>
+      <property name="maxPrivate" value="2"/>
+      <property name="maxPackage" value="2"/>
+      <property name="maxProtected" value="2"/>
+      <property name="maxPublic" value="2"/>
+    </module>
+    <module name="MethodLength">
+      <property name="max" value="3"/>
+    </module>
+    <module name="OuterTypeNumber">
+      <property name="max" value="1"/>
+    </module>
+    <module name="ParameterNumber">
+      <property name="max" value="2"/>
+    </module>
+    <module name="RecordComponentNumber">
+      <property name="max" value="2"/>
+    </module>
+
+    <!-- Metrics -->
+    <module name="BooleanExpressionComplexity">
+      <property name="max" value="2"/>
+    </module>
+    <module name="ClassDataAbstractionCoupling">
+      <property name="max" value="1"/>
+    </module>
+    <module name="ClassFanOutComplexity">
+      <property name="max" value="1"/>
+    </module>
+    <module name="CyclomaticComplexity">
+      <property name="max" value="2"/>
+    </module>
+    <module name="JavaNCSS">
+      <property name="methodMaximum" value="3"/>
+      <property name="classMaximum" value="10"/>
+      <property name="fileMaximum" value="20"/>
+      <property name="recordMaximum" value="5"/>
+    </module>
+    <module name="NPathComplexity">
+      <property name="max" value="2"/>
+    </module>
+  </module>
+</module>
