@@ -1,0 +1,41 @@
+[baseline] warm-up minimal-json...
+[baseline] minimal-json run 1: 2.817s
+[baseline] minimal-json run 2: 3.650s
+[baseline] minimal-json run 3: 4.371s
+[baseline] warm-up javapoet...
+[baseline] javapoet run 1: 5.737s
+[baseline] javapoet run 2: 6.819s
+[baseline] javapoet run 3: 6.618s
+[baseline] warm-up gs-core...
+[baseline] gs-core run 1: 8.101s
+[baseline] gs-core run 2: 9.812s
+[baseline] gs-core run 3: 9.109s
+[baseline] warm-up jgrapht-core...
+[baseline] jgrapht-core run 1: 2.098s
+[baseline] jgrapht-core run 2: 2.530s
+[baseline] jgrapht-core run 3: 3.517s
+[baseline] warm-up calcite-core...
+[baseline] calcite-core run 1: 59.230s
+[baseline] calcite-core run 2: 67.336s
+[baseline] calcite-core run 3: 63.550s
+[refactored] warm-up minimal-json...
+[refactored] minimal-json run 1: 2.901s
+[refactored] minimal-json run 2: 3.110s
+[refactored] minimal-json run 3: 3.564s
+[refactored] warm-up javapoet...
+[refactored] javapoet run 1: 4.492s
+[refactored] javapoet run 2: 4.354s
+[refactored] javapoet run 3: 4.582s
+[refactored] warm-up gs-core...
+[refactored] gs-core run 1: 9.465s
+[refactored] gs-core run 2: 9.034s
+[refactored] gs-core run 3: 8.887s
+[refactored] warm-up jgrapht-core...
+[refactored] jgrapht-core run 1: 1.889s
+[refactored] jgrapht-core run 2: 1.761s
+[refactored] jgrapht-core run 3: 1.918s
+[refactored] warm-up calcite-core...
+[refactored] calcite-core run 1: 64.807s
+[refactored] calcite-core run 2: 62.208s
+[refactored] calcite-core run 3: 63.760s
+Done. CSVs in benchmarks/.
