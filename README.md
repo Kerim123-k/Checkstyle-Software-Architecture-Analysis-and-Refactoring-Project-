@@ -12,6 +12,11 @@ with automated tests and tooling, that behaviour and performance are preserved.
 
 Registered target architecture: **Pipe-and-Filter**
 
+## 📄 Reports
+
+- **[Task 1 — Architecture Recovery Report (PDF)](Task-1-Architecture-Recovery-Report.pdf)**
+- **[Task 2 — Refactoring Report (PDF)](Task-2-Refactoring-Report.pdf)** · [DOCX](Task-2-Refactoring-Report.docx) · [Markdown source](report.md)
+
 ## What This Repository Contains
 
 This repo is a fork of the real [Checkstyle](https://github.com/checkstyle/checkstyle)
@@ -20,13 +25,10 @@ the **Metrics** category and every check in the **Size Violations** category, 16
 checks in total — rewritten from Checkstyle's original monolithic-check design into an
 explicit Pipe-and-Filter pipeline.
 
-The full write-ups for both project tasks are included:
+The reports are linked above. Other project artifacts:
 
-| File | Task |
+| File | What it is |
 |--|--|
-| [`docs/TASK-1-Architecture-Recovery.pdf`](docs/TASK-1-Architecture-Recovery.pdf) | Task 1 — Architecture recovery of the original Checkstyle codebase |
-| [`report.md`](report.md) | Task 2 — Full refactoring report (also built as PDF/DOCX) |
-| [`docs/SENG326-Task2-Report-Team13.pdf`](docs/SENG326-Task2-Report-Team13.pdf) | Task 2 — Rendered report |
 | [`specs/001-pipe-filter-metrics-sizes/`](specs/001-pipe-filter-metrics-sizes) | Formal spec, plan, and task breakdown used to drive the refactor |
 | [`structurizr/workspace.dsl`](structurizr/workspace.dsl) | C4 model of the resulting architecture |
 | [`jqassistant/rules/pipe-and-filter.xml`](jqassistant/rules/pipe-and-filter.xml) | jQAssistant rules that verify the architecture from the dependency graph |
@@ -120,16 +122,18 @@ Full analysis, raw CSVs, and the comparison plot are in `report.md` §10 and `be
 ## Repository Layout
 
 ```
+Task-1-Architecture-Recovery-Report.pdf   Task 1 report
+Task-2-Refactoring-Report.pdf / .docx     Task 2 report
+report.md                                 full Task 2 write-up (source of the rendered PDF)
 src/main/java/.../checks/metrics/         16 metrics driver + measurement filter classes
 src/main/java/.../checks/sizes/           10 sizes driver + measurement filter classes
 src/main/java/.../checks/pipeline/        shared Pipe-and-Filter infrastructure
 src/test/java/.../architecture/           ArchUnit rules (PipeAndFilterArchitectureTest, ...)
 benchmarks/                               benchmark scripts, raw results, summary
-docs/                                     rendered reports, screenshots, reference material
+docs/                                     screenshots, reference material
 specs/001-pipe-filter-metrics-sizes/      spec / plan / task breakdown for the refactor
 structurizr/                              C4 architecture model
 jqassistant/                              jQAssistant rule definitions
-report.md                                 full Task 2 write-up (source of the rendered PDF)
 ```
 
 ## Building and Running
@@ -146,12 +150,6 @@ Run the full test suite, including the architecture conformance tests:
 ```bash
 ./mvnw test
 ```
-
-## Reports
-
-The `docs/` folder and repo root include the full deliverables for both tasks: the Task 1
-architecture-recovery report, the Task 2 refactoring report (`report.md`, with generated
-PDF/DOCX), the Structurizr C4 model, and the screenshots referenced throughout both reports.
 
 ## Attribution
 
